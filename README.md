@@ -1,1 +1,15 @@
 # vmInfo
+
+Requirements
+  - libvirt (tested on 1.2.21 + QEMU API 1.2.21)
+  - pugixml (tested on 1.5)
+  - boost (1.56)
+
+TODO:
+  * client
+  * libvirt errors processing
+  * better communication protocol? (now XML)
+  * better api in Request/Result
+  * signal handler
+  * asio errors processing
+  * Makefile messy
