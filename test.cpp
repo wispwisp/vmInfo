@@ -69,6 +69,10 @@ BOOST_AUTO_TEST_CASE(UrlParser)
     BOOST_CHECK_EQUAL(u.port(), "81");
     BOOST_CHECK_EQUAL(u.resource(), "/qemu/list");
   }
+
+  BOOST_CHECK_THROW(Url("http://localhost:/qemu/list"), std::runtime_error);
+  BOOST_CHECK_THROW(Url("htt://localhost/qemu/list"), std::runtime_error);
+  BOOST_CHECK_THROW(Url("http:localhost/qemu/list"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
