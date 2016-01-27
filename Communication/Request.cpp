@@ -8,7 +8,11 @@ Request::Request(const char* requestStr)
   static const std::regex re{ R"(^/([^/]+)/([^/]+)/([^/\?]+)(?:\?(.*))?$)" };
 
   std::cmatch match;
-  if (std::regex_match(requestStr, match, re)) {
+  if (std::regex_match(requestStr, match, re) &&
+      !match[1].str().empty() &&
+      !match[2].str().empty() &&
+      !match[3].str().empty()) {
+
     isValid = true;
     hypervisor = match[1];
     domain = match[2];

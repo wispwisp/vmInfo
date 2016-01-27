@@ -13,4 +13,4 @@ TODO:
   * signal handler
   * asio errors processing
   * Makefile messy
-  * testcase: "http://localhost//list"
+  * method GET, POST, etc. in request

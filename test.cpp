@@ -19,6 +19,11 @@ BOOST_AUTO_TEST_CASE(request)
     BOOST_CHECK_EQUAL(r.getDomain(), "all");
     BOOST_CHECK_EQUAL(r.getCommand(), "list");
   }
+
+  BOOST_CHECK(not Request("qemu/all/list").valid());
+  BOOST_CHECK(not Request("qemu/all/").valid());
+  BOOST_CHECK(not Request("all/list").valid());
+  BOOST_CHECK(not Request("qemu//list").valid());
 }
 
 BOOST_AUTO_TEST_CASE(Result_Test)
