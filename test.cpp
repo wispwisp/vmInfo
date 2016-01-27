@@ -6,7 +6,7 @@
 #include "Command/Command.hpp"
 #include "Communication/Request.hpp"
 #include "Communication/Result.hpp"
-
+#include "Client/Url.hpp"
 
 BOOST_AUTO_TEST_SUITE(Communication)
 
@@ -50,6 +50,39 @@ BOOST_AUTO_TEST_CASE(Command_Test)
   Command::processComand(result, request, cmd);
 
   BOOST_CHECK_EQUAL(strcmp(result.get("domain_name"),"test"), 0);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(ClientSide)
+
+BOOST_AUTO_TEST_CASE(UrlParser)
+{
+  {
+    Url u("localhost:81");
+    BOOST_CHECK_EQUAL(u.host(), "localhost");
+    BOOST_CHECK_EQUAL(u.port(), "81");
+    BOOST_CHECK_EQUAL(u.resource(), "/");
+  }
+  {
+    Url u("localhost");
+    BOOST_CHECK_EQUAL(u.host(), "localhost");
+    BOOST_CHECK_EQUAL(u.port(), "80");
+    BOOST_CHECK_EQUAL(u.resource(), "/");
+  }
+  {
+    Url u("localhost/qemu/list");
+    BOOST_CHECK_EQUAL(u.host(), "localhost");
+    BOOST_CHECK_EQUAL(u.port(), "80");
+    BOOST_CHECK_EQUAL(u.resource(), "/qemu/list");
+  }
+  {
+    Url u("http://localhost:81/qemu/list");
+    BOOST_CHECK_EQUAL(u.host(), "localhost");
+    BOOST_CHECK_EQUAL(u.port(), "81");
+    BOOST_CHECK_EQUAL(u.resource(), "/qemu/list");
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

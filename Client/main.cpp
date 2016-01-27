@@ -1,5 +1,6 @@
 #include "../Communication/Request.hpp"
 #include "../Communication/Result.hpp"
+#include "Url.hpp"
 
 #include <iostream>
 #include <boost/asio.hpp>
@@ -24,20 +25,21 @@ void processData(const char* data) {
 
 int main(int argc, char** argv)  {
 
-  if (argc < 3) {
-    std::cout << "Usage: " << argv[0] << " [host]:[port]/uri [command]\n";
+  if (argc < 2) {
+    std::cout << "Usage: "
+	      << argv[0]
+	      << " [host]:[port]/uri (Example 'localhost:8001/qemu/list')\n";
     return -1;
   }
 
-  // TODO: Parsed URL class
-  const char* host = argv[1];
-  const char* port = argv[2];
+  Url url(argv[1]);
 
+  // initialization
   boost::asio::io_service io_service;
 
   tcp::socket s(io_service);
   tcp::resolver resolver(io_service);
-  boost::asio::connect(s, resolver.resolve({host, port}));
+  boost::asio::connect(s, resolver.resolve({url.host(), url.port()}));
 
   // write request
   char request[MAXLEN] = {"<uri>test:///default</uri><cmd>list</cmd>"};
