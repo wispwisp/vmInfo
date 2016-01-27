@@ -2,6 +2,25 @@
 #include "../Communication/Result.hpp"
 
 #include <iostream>
+#include <boost/asio.hpp>
+
+using boost::asio::ip::tcp;
+
+const int MAXLEN = 1024;
+
+void processData(const char* data) {
+  std::cout << data;
+  // TODO:
+  // get host
+  // get uri (hypervisor)
+  // get command
+
+  // send request
+  // recive respoce buffer ...
+  // .. parse it in Result
+
+  // present result as 'df' command output
+}
 
 int main(int argc, char** argv)  {
 
@@ -10,18 +29,32 @@ int main(int argc, char** argv)  {
     return -1;
   }
 
-  // get host
-  // get uri (hypervisor)
-  // get command
-  std::string requestStr;
-  Request request(requestStr.c_str());
+  // TODO: Parsed URL class
+  const char* host = argv[1];
+  const char* port = argv[2];
 
-  // send request
-  // recive respoce buffer ...
-  // .. parse it in Result
+  boost::asio::io_service io_service;
 
-  Result result;
+  tcp::socket s(io_service);
+  tcp::resolver resolver(io_service);
+  boost::asio::connect(s, resolver.resolve({host, port}));
 
-  // present result as 'df' command output
-  std::cout << result;
+  // write request
+  char request[MAXLEN] = {"<uri>test:///default</uri><cmd>list</cmd>"};
+  size_t reqSz = std::strlen(request);
+  boost::asio::write(s, boost::asio::buffer(request, reqSz));
+
+  // read responce
+  char data[MAXLEN];
+  s.async_read_some(boost::asio::buffer(data, MAXLEN),
+		    [&data](boost::system::error_code ec,
+			    std::size_t length) {
+		      if (!ec) {
+			data[length] = 0;
+			processData(data);
+		      }
+		      else
+			std::cerr <<  ec << '\n';
+		    });
+  io_service.run();
 }

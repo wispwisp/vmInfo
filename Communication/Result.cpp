@@ -48,7 +48,7 @@ struct xml_memory_writer: pugi::xml_writer
 size_t Result::write(char* buffer, size_t size) const noexcept {
 
   xml_memory_writer writer(buffer, size - 1);
-  m_result.print(writer);
+  m_result.print(writer, 0, pugi::format_raw);
 
   size_t sz = writer.written_size();
   buffer[sz] = 0;

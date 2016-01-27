@@ -11,7 +11,7 @@ $(NAME): Server/main.cpp Server/Server.cpp Command/Command.cpp Communication/Req
 	$(CPP) $(CFLAGS) -o $@.out $^ $(LIBS)
 
 client: Client/main.cpp Communication/Request.cpp Communication/Result.cpp
-	$(CPP) $(CFLAGS) -o $@.out $^ -lpugixml
+	$(CPP) $(CFLAGS) -o $@.out $^ -lpugixml -lboost_system -lpthread
 
 test: test.cpp Command/Command.cpp Communication/Request.cpp Communication/Result.cpp
 	$(CPP) $(CFLAGS) -o $@.out $^ $(LIBS) -lboost_unit_test_framework
