@@ -107,10 +107,14 @@ namespace Commands {
 
 Command::cmdType Command::decodeCommand(const Request& request) noexcept {
 
-  if (request.getCommand() == "list")
-    return cmdType::list;
-  else if (request.getCommand() == "fsInfo")
-    return cmdType::fsInfo;
+  if (request.getDomain() == "all") {
+    if (request.getCommand() == "list")
+      return cmdType::list;
+    else if (request.getCommand() == "fsInfo" ||
+	     request.getCommand() == "df" )
+      return cmdType::fsInfo;
+  }
+  // TODO: commands for specified domains
 
   return cmdType::Unknown;
 }

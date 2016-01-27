@@ -10,7 +10,7 @@ int main(int argc, char** argv)  {
   if (argc < 2) {
     std::cout << "Usage: "
 	      << argv[0]
-	      << " [host]:[port]/uri (Example 'localhost:8001/qemu/list')\n";
+	      << " [host]:[port]/uri (Example 'localhost:8001/qemu/all/list')\n";
     return -1;
   }
 
