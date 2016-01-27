@@ -1,19 +1,22 @@
 #ifndef REQUEST_H
 #define REQUEST_H
 
+#include <string>
 #include <iostream>
-#include <pugixml.hpp>
 
 class Request {
-  pugi::xml_document m_request;
+  bool isValid;
+  std::string hypervisor;
+  std::string domain;
+  std::string command;
 public:
-  Request(const char* clientRequest);
-  ~Request() = default;
-  Request(const Request&) = delete;
-  Request& operator= (const Request&) = delete;
-
+  explicit Request(const char*);
   friend std::ostream& operator<< (std::ostream&, const Request&);
-  const char* get(const char* option) const noexcept;
+
+  bool valid() const noexcept { return isValid; }
+  const std::string& getHypervisor() const noexcept { return hypervisor; }
+  const std::string& getDomain() const noexcept { return domain; }
+  const std::string& getCommand() const noexcept { return command; }
 };
 
 #endif // REQUEST_H

@@ -36,8 +36,8 @@ int main(int argc, char** argv)  {
 			    std::size_t length) {
 		      if (!ec) {
 			data[length] = 0;
-			Result r(data);
-			std::cout << r << '\n';
+			//Result r(data);
+			std::cout << data << '\n';
 		      }
 		      else
 			std::cerr << ec << '\n';

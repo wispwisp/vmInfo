@@ -107,10 +107,9 @@ namespace Commands {
 
 Command::cmdType Command::decodeCommand(const Request& request) noexcept {
 
-  const char* cmd = request.get("cmd");
-  if (!strcmp(cmd, "list"))
+  if (request.getCommand() == "list")
     return cmdType::list;
-  else if (!strcmp(cmd, "fsInfo"))
+  else if (request.getCommand() == "fsInfo")
     return cmdType::fsInfo;
 
   return cmdType::Unknown;
@@ -121,7 +120,9 @@ void Command::processComand(Result& result,
 			    const Request& request,
 			    cmdType c) noexcept {
 
-  virConnectPtr connection = virConnectOpen(request.get("uri"));
+  /* TODO !!!*/ std::string name = request.getHypervisor() == "qemu" ? "qemu:///session" : "test:///default";
+
+  virConnectPtr connection = virConnectOpen(name.c_str());
   if (!connection) {
     result.add("error", "Domain undefined error");
     return;

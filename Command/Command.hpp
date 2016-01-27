@@ -7,7 +7,7 @@
 class Command {
 public:
   enum class cmdType : char { list, fsInfo, Unknown };
-  static cmdType decodeCommand(const Request& request) noexcept;
+  static cmdType decodeCommand(const Request&) noexcept;
   static void processComand(Result&, const Request&, cmdType) noexcept;
 };
 

@@ -6,10 +6,10 @@ Requirements
   - boost (1.56)
 
 TODO:
-  * client
+  * parse hypervisor for virConnectOpen()
   * libvirt errors processing
   * better communication protocol? (now XML)
-  * better api in Request/Result
+  * better api in Result
   * signal handler
   * asio errors processing
   * Makefile messy

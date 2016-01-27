@@ -13,9 +13,9 @@ public:
   explicit Url(const std::string& url)
     : m_host(), m_res(), m_port() {
 
-    std::regex re{ R"(^(?:http:/+)?([^/:]+)(?::(\d+))?(/.*)?$)" };
-    std::smatch match;
+    static const std::regex re{ R"(^(?:http:/+)?([^/:]+)(?::(\d+))?(/.*)?$)" };
 
+    std::smatch match;
     if (!std::regex_match(url, match, re)) {
       throw std::runtime_error("Invalid url");
     }

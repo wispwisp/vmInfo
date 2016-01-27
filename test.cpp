@@ -10,16 +10,16 @@
 
 BOOST_AUTO_TEST_SUITE(Communication)
 
-BOOST_AUTO_TEST_CASE(Request_Test)
+BOOST_AUTO_TEST_CASE(request)
 {
-  Request r("<a>a content<b>a/b content</b><c>a/c content</c></a>");
-
-  BOOST_CHECK(r.get("a"));
-  BOOST_CHECK(not r.get("b"));
-  BOOST_CHECK(r.get("a/b"));
-  BOOST_CHECK(r.get("a/c"));
+  {
+    Request r("/qemu/all/list");
+    BOOST_CHECK(r.valid());
+    BOOST_CHECK_EQUAL(r.getHypervisor(), "qemu");
+    BOOST_CHECK_EQUAL(r.getDomain(), "all");
+    BOOST_CHECK_EQUAL(r.getCommand(), "list");
+  }
 }
-
 
 BOOST_AUTO_TEST_CASE(Result_Test)
 {
@@ -39,20 +39,6 @@ BOOST_AUTO_TEST_CASE(Result_Test)
 BOOST_AUTO_TEST_SUITE_END()
 
 
-BOOST_AUTO_TEST_SUITE(Commands)
-
-BOOST_AUTO_TEST_CASE(Command_Test)
-{
-  Request request("<uri>test:///default</uri><cmd>list</cmd>");
-  Result result;
-
-  auto cmd = Command::decodeCommand(request);
-  Command::processComand(result, request, cmd);
-
-  BOOST_CHECK_EQUAL(strcmp(result.get("domain_name"),"test"), 0);
-}
-
-BOOST_AUTO_TEST_SUITE_END()
 
 
 BOOST_AUTO_TEST_SUITE(ClientSide)

@@ -31,13 +31,15 @@ namespace AsioTools{
 			       if (!ec) {
 				 data[length] = 0;
 				 Request request(data);
-				 auto cmd = Command::decodeCommand(request);
+				 if (request.valid()) {
+				   auto cmd = Command::decodeCommand(request);
 
-				 Result result;
-				 Command::processComand(result, request, cmd);
+				   Result result;
+				   Command::processComand(result, request, cmd);
 
-				 size_t sz = result.write(data, maxLength);
-				 boost::asio::write(socket, boost::asio::buffer(data, sz));
+				   size_t sz = result.write(data, maxLength);
+				   boost::asio::write(socket, boost::asio::buffer(data, sz));
+				 }
 			       }
 			     });
     }
