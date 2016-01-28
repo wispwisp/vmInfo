@@ -39,6 +39,8 @@ namespace AsioTools{
 				 size_t sz = result.write(data, maxLength);
 				 boost::asio::write(socket, boost::asio::buffer(data, sz));
 			       }
+			       else
+				 std::cerr << ec << '\n';
 			     });
     }
 
@@ -62,6 +64,8 @@ namespace AsioTools{
 			    [this](boost::system::error_code ec) {
 			      if (!ec)
 				std::make_shared<session>(std::move(socket))->start();
+			      else
+				std::cerr << ec << '\n';
 			      doAccept();
 			    });
     }
