@@ -6,7 +6,6 @@ Requirements
   - boost (1.56)
 
 TODO:
-  * parse hypervisor for virConnectOpen()
   * libvirt errors processing
   * signal handler
   * asio errors processing

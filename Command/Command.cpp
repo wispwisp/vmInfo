@@ -78,11 +78,20 @@ namespace ToolsForLibvirt {
 	}
 	free(domains);
       }
-      else 
+      else
 	result.error("Domains error");
     }
     else
       result.error("There are no domains");
+  }
+
+  const char* hypervisorName(const std::string& domainName) {
+    if (domainName == "qemu")
+      return "qemu:///session";
+    else if (domainName == "test")
+      return "test:///default";
+
+    return nullptr;
   }
 }
 
@@ -126,9 +135,13 @@ void Command::processComand(Result& result,
 			    const Request& request,
 			    cmdType c) noexcept {
 
-  /* TODO !!!*/ std::string name = request.getHypervisor() == "qemu" ? "qemu:///session" : "test:///default";
-
-  virConnectPtr connection = virConnectOpen(name.c_str());
+  auto name = ToolsForLibvirt::hypervisorName(request.getHypervisor());
+  if (!name) {
+    result.error("Unsupported Hypervisor");
+    return;
+  }
+  
+  virConnectPtr connection = virConnectOpen(name);
   if (!connection) {
     result.error("Hypervisor connection error");
     return;
