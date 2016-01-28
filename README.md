@@ -13,3 +13,4 @@ TODO:
   * asio errors processing
   * Makefile messy
   * method GET, POST, etc. in request
+  * change Server`s std::cerr to log

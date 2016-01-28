@@ -111,10 +111,61 @@ struct xml_memory_writer: pugi::xml_writer
 };
 size_t Result::write(char* buffer, size_t size) const noexcept {
 
-  xml_memory_writer writer(buffer, size - 1);
+  size_t left = size;
+  char* it = buffer;
+
+  // write status line:
+
+  // (+2 for \r\n):
+  if ((http.statusLine.size() + 2) >= size) {
+    std::cerr << "Buffer overflow";
+    return 0;
+  }
+
+  it = std::copy(std::begin(http.statusLine), std::end(http.statusLine), it);
+  *it++ = '\r';
+  *it++ = '\n';
+  left = buffer - it;
+
+  // write headers:
+  for (const auto& header : http.headers) {
+
+    // +3 becouse of ':', '\n', '\r'
+    if ((header.first.size() + header.second.size() + 3) >= left) {
+      std::cerr << "Buffer overflow";
+      return 0;
+    }
+
+    it = std::copy(std::begin(header.first), std::end(header.first), it);
+    *it++ = ':';
+    it = std::copy(std::begin(header.second), std::end(header.second), it);
+
+    *it++ = '\r';
+    *it++ = '\n';
+
+    left = buffer - it;
+  }
+
+  if (left <= 2) {
+    std::cerr << "Buffer overflow";
+    return 0;
+  }
+  
+  *it++ = '\r';
+  *it++ = '\n';
+  left = buffer - it;
+
+  if (!left) {
+    std::cerr << "Buffer overflow";
+    return 0;
+  }
+
+  // write body
+  xml_memory_writer writer(it, left - 1);
   body.print(writer, 0, pugi::format_raw);
 
   size_t sz = writer.written_size();
+  sz += std::distance(buffer, it);
   buffer[sz] = 0;
 
   return sz;
