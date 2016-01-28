@@ -26,21 +26,6 @@ BOOST_AUTO_TEST_CASE(request)
   BOOST_CHECK(not Request("qemu//list").valid());
 }
 
-BOOST_AUTO_TEST_CASE(Result_Test)
-{
-  Result rs;
-
-  auto check_option = "some_option";
-  auto check_value = "some_value";
-
-  BOOST_CHECK(not rs.get(check_option));
-  rs.add(check_option, check_value);
-
-  auto checked = rs.get(check_option);
-  BOOST_CHECK(checked);
-  BOOST_CHECK_EQUAL(strcmp(checked, check_value), 0);
-}
-
 BOOST_AUTO_TEST_SUITE_END()
 
 
