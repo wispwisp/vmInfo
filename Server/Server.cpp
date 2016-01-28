@@ -28,12 +28,13 @@ namespace AsioTools{
 				 data[length] = 0;
 				 Request request(data);
 
-				 Result result("HTTP 200 OK");
+				 Result result;
 				 if (request.valid()) {
+				   result.addStatusLine("HTTP 200 OK");
 				   auto cmd = Command::decodeCommand(request);
 				   Command::processComand(result, request, cmd);
 				 } else
-				   result.error("Bad request");
+				   result.addStatusLine("HTTP 400 Bad Request");
 
 				 size_t sz = result.write(data, maxLength);
 				 boost::asio::write(socket, boost::asio::buffer(data, sz));

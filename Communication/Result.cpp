@@ -2,6 +2,10 @@
 
 #include <cstring>
 
+Result::Result()
+  : http{ std::string(), Headers() },
+    body(), currentDomain(body) {}
+
 Result::Result(std::string statusLine)
   : http{ std::move(statusLine), Headers() },
     body(), currentDomain(body) {}
@@ -10,6 +14,10 @@ Result::Result(std::string statusLine, Headers headers)
   : http{ std::move(statusLine), std::move(headers) },
     body(), currentDomain(body) {}
 
+
+void Result::addStatusLine(std::string sl) {
+  http.statusLine = std::move(sl);
+}
 
 void Result::addHTTPHeader(std::string name, std::string value) {
   http.headers[std::move(name)] = std::move(value);

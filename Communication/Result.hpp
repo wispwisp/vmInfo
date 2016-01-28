@@ -20,8 +20,11 @@ class Result {
 
 public:
   // headers
+  Result();
   Result(std::string statusLine);
   Result(std::string statusLine, Headers headers);
+
+  void addStatusLine(std::string);
   void addHTTPHeader(std::string, std::string);
 
   // body
