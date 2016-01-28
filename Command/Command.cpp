@@ -8,38 +8,32 @@
 
 namespace ToolsForLibvirt {
 
-  void collectDomainName(Result& result, virDomainPtr domain) noexcept {
-    const char* name = virDomainGetName(domain);
-    if (name)
-      result.add("domain_name", name);
-    else
-      result.add("domain_name", "Undefined");
+  void domainList(Result& /*result*/, virDomainPtr /*domain*/) noexcept {
+    ;// dummy example
   }
 
-  void appendBlockInfo(Result& result,
-		       virDomainPtr domain,
-		       virDomainFSInfoPtr info) noexcept {
-    if (info->ndevAlias) {
+  void appendFSInfo(Result& result,
+		    virDomainPtr domain,
+		    virDomainFSInfoPtr info) noexcept {
 
-      // what about the array of aliases ?
+    if (info->ndevAlias) {
       const char *mountpoint = info->devAlias[0];
 
       virDomainBlockInfo blockInfo;
       if (virDomainGetBlockInfo(domain, mountpoint, &blockInfo, 0) != -1) {
-	result.add("fs_capacity",
-		   std::to_string(blockInfo.capacity).c_str());
-	result.add("fs_allocation",
-		   std::to_string(blockInfo.allocation).c_str());
-	result.add("fs_physical",
-		   std::to_string(blockInfo.physical).c_str());
+	result.addCurrentDomainFsInfo(info->name,
+				      info->fstype,
+				      info->mountpoint,
+				      blockInfo.capacity,
+				      blockInfo.allocation,
+				      blockInfo.physical);
+	return;
       }
     }
-  }
 
-  void appendFSInfo(Result& result, virDomainFSInfoPtr info) noexcept {
-    result.add("fs_name", info->name);
-    result.add("fs_type", info->fstype);
-    result.add("fs_mount", info->mountpoint);
+    result.addCurrentDomainFsInfo(info->name,
+				  info->fstype,
+				  info->mountpoint);
   }
 
   void collectFSInfoFromDomain(Result& result, virDomainPtr domain) noexcept {
@@ -48,18 +42,25 @@ namespace ToolsForLibvirt {
     virDomainFSInfoPtr *info;
     int numOfMountPoints = virDomainGetFSInfo(domain, &info, 0);
     if (numOfMountPoints == -1) {
-      result.add("error", "virConnectListDomains()");
+      result.error("Could not get FS info");
       return;
     }
 
     // collect fs`s
     for (int i = 0; i < numOfMountPoints; i++) {
-      appendFSInfo(result, info[i]);
-      appendBlockInfo(result, domain, info[i]);
+      appendFSInfo(result, domain, info[i]);
       virDomainFSInfoFree(info[i]);
     }
 
     free(info);
+  }
+
+  void appendDomain(Result& result, virDomainPtr domain) noexcept {
+    const char* name = virDomainGetName(domain);
+    if (name)
+      result.newDomain(name);
+    else
+      result.newDomain("Undefined");
   }
 
   void doWithAllDomains(virConnectPtr connection,
@@ -71,16 +72,17 @@ namespace ToolsForLibvirt {
     if (domainNumber ) {
       if (domainNumber != -1) {
 	for (int i = 0; i < domainNumber; i++) {
+	  appendDomain(result, domains[i]);
 	  action(result, domains[i]);
 	  virDomainFree(domains[i]);
 	}
 	free(domains);
       }
       else 
-	result.add("error", "virConnectListAllDomains()");
+	result.error("Domains error");
     }
     else
-      result.add("info", "There are no domains");
+      result.error("There are no domains");
   }
 }
 
@@ -89,9 +91,10 @@ namespace Commands {
   void list(virConnectPtr connection,
 	    Result& result,
 	    const Request& /*request*/) noexcept {
+
     ToolsForLibvirt::doWithAllDomains(connection,
 				      result,
-				      ToolsForLibvirt::collectDomainName);
+				      ToolsForLibvirt::domainList);
   }
 
   void fileSystems(virConnectPtr connection,
@@ -114,7 +117,6 @@ Command::cmdType Command::decodeCommand(const Request& request) noexcept {
 	     request.getCommand() == "df" )
       return cmdType::fsInfo;
   }
-  // TODO: commands for specified domains
 
   return cmdType::Unknown;
 }
@@ -128,7 +130,7 @@ void Command::processComand(Result& result,
 
   virConnectPtr connection = virConnectOpen(name.c_str());
   if (!connection) {
-    result.add("error", "Domain undefined error");
+    result.error("Hypervisor connection error");
     return;
   }
 
@@ -144,7 +146,7 @@ void Command::processComand(Result& result,
 
   case cmdType::Unknown:
   default:
-    result.add("error", "No such command");
+    result.error("Undefined command");
   }
 
   virConnectClose(connection);

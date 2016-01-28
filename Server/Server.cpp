@@ -1,11 +1,7 @@
 #include "Server.hpp"
 
 #include <boost/asio.hpp>
-
-#include <cstdlib>
-#include <iostream>
 #include <memory>
-#include <utility>
 
 #include "../Command/Command.hpp"
 #include "../Communication/Request.hpp"
@@ -31,15 +27,16 @@ namespace AsioTools{
 			       if (!ec) {
 				 data[length] = 0;
 				 Request request(data);
+
+				 Result result("HTTP 200 OK");
 				 if (request.valid()) {
 				   auto cmd = Command::decodeCommand(request);
-
-				   Result result;
 				   Command::processComand(result, request, cmd);
+				 } else
+				   result.error("Bad request");
 
-				   size_t sz = result.write(data, maxLength);
-				   boost::asio::write(socket, boost::asio::buffer(data, sz));
-				 }
+				 size_t sz = result.write(data, maxLength);
+				 boost::asio::write(socket, boost::asio::buffer(data, sz));
 			       }
 			     });
     }
