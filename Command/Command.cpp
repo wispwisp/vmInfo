@@ -5,6 +5,7 @@
 #include <functional>
 
 #include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
 
 namespace ToolsForLibvirt {
 
@@ -29,6 +30,8 @@ namespace ToolsForLibvirt {
 				      blockInfo.physical);
 	return;
       }
+      else
+	result.error(virGetLastErrorMessage());
     }
 
     result.addCurrentDomainFsInfo(info->name,
@@ -42,7 +45,7 @@ namespace ToolsForLibvirt {
     virDomainFSInfoPtr *info;
     int numOfMountPoints = virDomainGetFSInfo(domain, &info, 0);
     if (numOfMountPoints == -1) {
-      result.error("Could not get FS info");
+      result.error(virGetLastErrorMessage());
       return;
     }
 
@@ -69,7 +72,7 @@ namespace ToolsForLibvirt {
 
     virDomainPtr *domains;
     int domainNumber = virConnectListAllDomains(connection, &domains, 0);
-    if (domainNumber ) {
+    if (domainNumber) {
       if (domainNumber != -1) {
 	for (int i = 0; i < domainNumber; i++) {
 	  appendDomain(result, domains[i]);
@@ -79,7 +82,7 @@ namespace ToolsForLibvirt {
 	free(domains);
       }
       else
-	result.error("Domains error");
+	result.error(virGetLastErrorMessage());
     }
     else
       result.error("There are no domains");
@@ -140,10 +143,10 @@ void Command::processComand(Result& result,
     result.error("Unsupported Hypervisor");
     return;
   }
-  
+
   virConnectPtr connection = virConnectOpen(name);
   if (!connection) {
-    result.error("Hypervisor connection error");
+    result.error(virGetLastErrorMessage());
     return;
   }
 
