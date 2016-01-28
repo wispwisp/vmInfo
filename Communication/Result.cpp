@@ -61,7 +61,7 @@ bool Result::addCurrentDomainFsInfo(const char* name,
 				    const char* mountpoint,
 				    const unsigned long& c,
 				    const unsigned long& a,
-				    const unsigned long& p) noexcept {
+				    const unsigned long& p) {
 
   auto fsInfo = currentDomain.append_child("fsInfo");
   if (fsInfo) {
@@ -74,6 +74,7 @@ bool Result::addCurrentDomainFsInfo(const char* name,
     fsInfo.append_child("mountpoint")
       .text().set(mountpoint);
 
+    // could throw. Todo: pugi upper version, conversion from unsgined long
     fsInfo.append_child("capacity")
       .text().set(std::to_string(c).c_str());
 
@@ -186,8 +187,6 @@ std::ostream& operator<< (std::ostream& os, const Result& rhs) {
   for (const auto& header : rhs.http.headers)
     os << header.first << ':' << header.second << '\n';
 
-  //rhs.body.save(os, 0, pugi::format_no_declaration);
-  rhs.body.save(os, 0, pugi::format_raw & pugi::format_no_declaration);
-
+  rhs.body.save(os, 0, pugi::format_no_declaration);
   return os;
 }

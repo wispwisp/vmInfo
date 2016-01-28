@@ -33,10 +33,9 @@ public:
   bool addCurrentDomainFsInfo(const char* name,
 			      const char* type,
 			      const char* mountpoint,
-			      // could be undefined:
 			      const unsigned long& c,
 			      const unsigned long& a,
-			      const unsigned long& p) noexcept;
+			      const unsigned long& p);
 
   bool error(const char*) noexcept;
 

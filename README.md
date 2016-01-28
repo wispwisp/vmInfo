@@ -8,7 +8,6 @@ Requirements
 TODO:
   * parse hypervisor for virConnectOpen()
   * libvirt errors processing
-  * better communication protocol? (now XML)
   * signal handler
   * asio errors processing
   * Makefile messy
