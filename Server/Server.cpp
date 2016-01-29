@@ -25,20 +25,24 @@ namespace AsioTools{
 			     [this, self](boost::system::error_code ec,
 					  std::size_t length) {
 			       if (!ec) {
-				 data[length] = 0;
-				 Request request(data);
+				 try {
+				   data[length] = 0;
+				   Request request(data);
 
-				 Result result;
-				 if (request.valid()) {
-				   result.addStatusLine("HTTP 200 OK");
-				   result.addHTTPHeader("Content-Type", "text/xml");
-				   auto cmd = Command::decodeCommand(request);
-				   Command::processComand(result, request, cmd);
-				 } else
-				   result.addStatusLine("HTTP 400 Bad Request");
+				   Result result;
+				   if (request.valid()) {
+				     result.addStatusLine("HTTP 200 OK");
+				     result.addHTTPHeader("Content-Type", "text/xml");
+				     auto cmd = Command::decodeCommand(request);
+				     Command::processComand(result, request, cmd);
+				   } else
+				     result.addStatusLine("HTTP 400 Bad Request");
 
-				 size_t sz = result.write(data, maxLength);
-				 boost::asio::write(socket, boost::asio::buffer(data, sz));
+				   size_t sz = result.write(data, maxLength);
+				   boost::asio::write(socket, boost::asio::buffer(data, sz));
+				 } catch(std::exception& ex) {
+				   std::cerr << ex.what() << '\n';
+				 }
 			       }
 			       else
 				 std::cerr << ec << '\n';
