@@ -1,20 +1,23 @@
 .PHONY: all clean
 
-NAME:=vmInfo
+SERVER:=vmInfo
+CLIENT:=client
+TEST:=test
+
 CPP:=gcc
 CFLAGS:=-lstdc++ -std=c++14 -ggdb -Wall -Wextra -Wshadow -pedantic -Weffc++ -O0
 LIBS:=-lpugixml -lvirt -lboost_system
 
-all: $(NAME)
+all: $(SERVER) $(CLIENT) $(TEST)
 
-$(NAME): Server/main.cpp Server/Server.cpp Command/Command.cpp Communication/Request.cpp Communication/Result.cpp
+$(SERVER): Server/main.cpp Server/Server.cpp Command/Command.cpp Communication/Request.cpp Communication/Result.cpp
 	$(CPP) $(CFLAGS) -o $@.out $^ $(LIBS)
 
-client: Client/main.cpp Communication/Request.cpp Communication/Result.cpp
+$(CLIENT): Client/main.cpp Communication/Request.cpp Communication/Result.cpp
 	$(CPP) $(CFLAGS) -o $@.out $^ -lpugixml -lboost_system -lpthread
 
-test: test.cpp Command/Command.cpp Communication/Request.cpp Communication/Result.cpp
+$(TEST): test.cpp Command/Command.cpp Communication/Request.cpp Communication/Result.cpp
 	$(CPP) $(CFLAGS) -o $@.out $^ $(LIBS) -lboost_unit_test_framework
 
 clean:
-	rm -f $(NAME).out test.out client.out *.o *~
+	rm -f $(SERVER).out $(TEST).out $(CLIENT).out *.o *~
