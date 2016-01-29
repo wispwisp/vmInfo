@@ -34,9 +34,13 @@ int main(int argc, char** argv)  {
 		    [&data](boost::system::error_code ec,
 			    std::size_t length) {
 		      if (!ec) {
-			data[length] = 0;
-			Responce responce(data);
-			std::cout << responce;
+			try {
+			  data[length] = 0;
+			  Responce responce(data);
+			  std::cout << responce;
+			} catch(std::exception& ex) {
+			  std::cerr << ex.what() << '\n';
+			}
 		      }
 		      else
 			std::cerr << ec << '\n';

@@ -90,11 +90,6 @@ int Responce::statusCode() const {
 }
 
 std::ostream& operator<< (std::ostream& os, const Responce& rhs) {
-#ifdef MY_OSTREAM_DEBUG_OUTPUT_HTTP_HEADERS
-  os << rhs.m_statusLine << '\n';
-  for (const auto& header : rhs.m_headers)
-    os << header.first << ':' << header.second << '\n';
-#endif
   os << rhs.m_body;
   return os;
 }
