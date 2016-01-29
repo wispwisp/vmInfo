@@ -37,7 +37,10 @@ int main(int argc, char** argv)  {
 			try {
 			  data[length] = 0;
 			  Responce responce(data);
-			  std::cout << responce;
+			  if (responce.statusCode() == 200)
+			    std::cout << responce;
+			  else
+			    std::cerr << responce.statusLine() << '\n';
 			} catch(std::exception& ex) {
 			  std::cerr << ex.what() << '\n';
 			}
