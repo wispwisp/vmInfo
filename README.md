@@ -12,11 +12,8 @@ Uagse
 
 TODO:
   * client
-    - parse responce
     - console output ('df'-like for fs)
   * signal handler
-  * Makefile messy
   * method GET, POST, etc. in request
   * unsigned long to pugi
-  * headers: content-lenght, content-type
   * append_child() checks

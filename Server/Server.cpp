@@ -31,6 +31,7 @@ namespace AsioTools{
 				 Result result;
 				 if (request.valid()) {
 				   result.addStatusLine("HTTP 200 OK");
+				   result.addHTTPHeader("Content-Type", "text/xml");
 				   auto cmd = Command::decodeCommand(request);
 				   Command::processComand(result, request, cmd);
 				 } else

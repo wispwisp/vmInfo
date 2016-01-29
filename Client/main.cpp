@@ -1,6 +1,5 @@
-#include "../Communication/Request.hpp"
-#include "../Communication/Result.hpp"
 #include "Url.hpp"
+#include "Responce.hpp"
 
 #include <iostream>
 #include <boost/asio.hpp>
@@ -36,8 +35,8 @@ int main(int argc, char** argv)  {
 			    std::size_t length) {
 		      if (!ec) {
 			data[length] = 0;
-			//Result r(data);
-			std::cout << data << '\n';
+			Responce responce(data);
+			std::cout << responce << '\n';
 		      }
 		      else
 			std::cerr << ec << '\n';
