@@ -36,7 +36,7 @@ int main(int argc, char** argv)  {
 		      if (!ec) {
 			data[length] = 0;
 			Responce responce(data);
-			std::cout << responce << '\n';
+			std::cout << responce;
 		      }
 		      else
 			std::cerr << ec << '\n';

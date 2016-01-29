@@ -11,9 +11,8 @@ Uagse
     (Example: './client localhost:8001/qemu/all/fsInfo')
 
 TODO:
-  * client
-    - console output ('df'-like for fs)
   * signal handler
   * method GET, POST, etc. in request
   * unsigned long to pugi
   * append_child() checks
+  * percent
