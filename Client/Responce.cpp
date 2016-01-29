@@ -69,7 +69,12 @@ Responce::Responce(const char* responceStr)
   } while (len);
 
   // body:
-  m_body = std::string(rangeBegin, std::distance(rangeBegin, last));
+  const auto contentType = m_headers.find("Content-Type");
+  if (contentType != m_headers.cend())
+    m_body = Body::createBody(Body::decodeType(contentType->second),
+			      rangeBegin);
+  else
+    m_body = Body::createBody(Body::Type::String, rangeBegin);
 }
 
 const std::string& Responce::header(const std::string& hdr) const {
@@ -85,12 +90,11 @@ int Responce::statusCode() const {
 }
 
 std::ostream& operator<< (std::ostream& os, const Responce& rhs) {
-
+#ifdef MY_OSTREAM_DEBUG_OUTPUT_HTTP_HEADERS
   os << rhs.m_statusLine << '\n';
   for (const auto& header : rhs.m_headers)
     os << header.first << ':' << header.second << '\n';
-
+#endif
   os << rhs.m_body;
-  //  rhs.body.save(os, 0, pugi::format_no_declaration);
   return os;
 }

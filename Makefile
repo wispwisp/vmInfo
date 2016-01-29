@@ -13,7 +13,7 @@ all: $(SERVER) $(CLIENT) $(TEST)
 $(SERVER): Server/main.cpp Server/Server.cpp Command/Command.cpp Communication/Request.cpp Communication/Result.cpp
 	$(CPP) $(CFLAGS) -o $@.out $^ $(LIBS)
 
-$(CLIENT): Client/main.cpp Client/Responce.cpp
+$(CLIENT): Client/main.cpp Client/Responce.cpp Client/Body.cpp
 	$(CPP) $(CFLAGS) -o $@.out $^ -lpugixml -lboost_system -lpthread
 
 $(TEST): test.cpp Command/Command.cpp Communication/Request.cpp Communication/Result.cpp
