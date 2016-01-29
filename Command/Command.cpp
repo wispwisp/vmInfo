@@ -22,21 +22,27 @@ namespace ToolsForLibvirt {
 
       virDomainBlockInfo blockInfo;
       if (virDomainGetBlockInfo(domain, mountpoint, &blockInfo, 0) != -1) {
-	result.addCurrentDomainFsInfo(info->name,
-				      info->fstype,
-				      info->mountpoint,
-				      blockInfo.capacity,
-				      blockInfo.allocation,
-				      blockInfo.physical);
+	if (!result.addCurrentDomainFsInfo(info->name,
+					   info->fstype,
+					   info->mountpoint,
+					   blockInfo.capacity,
+					   blockInfo.allocation,
+					   blockInfo.physical)) {
+	  std::cerr << "Node allocation failed\n";
+	}
 	return;
       }
-      else
-	result.error(virGetLastErrorMessage());
+      else {
+	if (!result.error(virGetLastErrorMessage()))
+	  std::cerr << "Node allocation failed\n";
+      }
     }
 
-    result.addCurrentDomainFsInfo(info->name,
-				  info->fstype,
-				  info->mountpoint);
+    if (!result.addCurrentDomainFsInfo(info->name,
+				       info->fstype,
+				       info->mountpoint)) {
+      std::cerr << "Node allocation failed\n";
+    }
   }
 
   void collectFSInfoFromDomain(Result& result, virDomainPtr domain) noexcept {
@@ -45,7 +51,8 @@ namespace ToolsForLibvirt {
     virDomainFSInfoPtr *info;
     int numOfMountPoints = virDomainGetFSInfo(domain, &info, 0);
     if (numOfMountPoints == -1) {
-      result.error(virGetLastErrorMessage());
+      if (!result.error(virGetLastErrorMessage()))
+	std::cerr << "Node allocation failed\n";
       return;
     }
 
@@ -60,10 +67,14 @@ namespace ToolsForLibvirt {
 
   void appendDomain(Result& result, virDomainPtr domain) noexcept {
     const char* name = virDomainGetName(domain);
-    if (name)
-      result.newDomain(name);
-    else
-      result.newDomain("Undefined");
+    if (name) {
+      if (!result.newDomain(name))
+	std::cerr << "Node allocation failed\n";
+    }
+    else {
+      if(!result.newDomain("Undefined"))
+	std::cerr << "Node allocation failed\n";;
+    }
   }
 
   void doWithAllDomains(virConnectPtr connection,
@@ -81,11 +92,15 @@ namespace ToolsForLibvirt {
 	}
 	free(domains);
       }
-      else
-	result.error(virGetLastErrorMessage());
+      else {
+	if (!result.error(virGetLastErrorMessage()))
+	  std::cerr << "Node allocation failed\n";
+      }
     }
-    else
-      result.error("There are no domains");
+    else {
+      if (!result.error("There are no domains"))
+	std::cerr << "Node allocation failed\n";;
+    }
   }
 
   const char* hypervisorName(const std::string& domainName) noexcept {
@@ -140,13 +155,15 @@ void Command::processComand(Result& result,
 
   auto name = ToolsForLibvirt::hypervisorName(request.getHypervisor());
   if (!name) {
-    result.error("Unsupported Hypervisor");
+    if (!result.error("Unsupported Hypervisor"))
+      std::cerr << "Node allocation failed\n";
     return;
   }
 
   virConnectPtr connection = virConnectOpen(name);
   if (!connection) {
-    result.error(virGetLastErrorMessage());
+    if (!result.error(virGetLastErrorMessage()))
+      std::cerr << "Node allocation failed\n";;
     return;
   }
 
@@ -162,7 +179,8 @@ void Command::processComand(Result& result,
 
   case cmdType::Unknown:
   default:
-    result.error("Undefined command");
+    if (!result.error("Undefined command"))
+      std::cerr << "Node allocation failed\n";
   }
 
   virConnectClose(connection);

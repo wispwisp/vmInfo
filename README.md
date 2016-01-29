@@ -11,7 +11,6 @@ Usage
     (Example: './client localhost:8001/qemu/all/fsInfo')
 
 TODO:
-  * Result add functions should be noexcept
   * signal handler
   * method GET, POST, etc. in request
   * unsigned long to pugi
