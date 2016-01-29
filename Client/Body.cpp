@@ -77,7 +77,7 @@ namespace XmlPrint {
 	os << c / 1024 << ' ' // size total (as guest see)
 	   << (c - a) / 1024 << ' ' // aviable
 	   << a / 1024 <<' ' // used
-	   << 0
+	   << (c-a) / (c / 100)
 	   << "% ";// percent
 
       } else

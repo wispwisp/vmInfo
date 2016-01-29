@@ -14,4 +14,3 @@ TODO:
   * signal handler
   * method GET, POST, etc. in request
   * unsigned long to pugi
-  * percent
