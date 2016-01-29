@@ -27,14 +27,15 @@ void Result::addHTTPHeader(std::string name, std::string value) {
 bool Result::newDomain(const char* name) noexcept {
 
   auto nDomain = body.append_child("domain");
+  bool result = nDomain;
   if (nDomain) {
     currentDomain = nDomain;
 
-    currentDomain.append_attribute("name")
+    result = currentDomain.append_attribute("name")
       .set_value(name);
   }
 
-  return nDomain;
+  return result;
 }
 
 bool Result::addCurrentDomainFsInfo(const char* name,
@@ -42,18 +43,19 @@ bool Result::addCurrentDomainFsInfo(const char* name,
 				    const char* mountpoint) noexcept {
 
   auto fsInfo = currentDomain.append_child("fsInfo");
+  bool result = fsInfo;
   if (fsInfo) {
-    fsInfo.append_child("name")
+    result = fsInfo.append_child("name")
       .text().set(name);
 
-    fsInfo.append_child("type")
+    result = fsInfo.append_child("type")
       .text().set(type);
 
-    fsInfo.append_child("mountpoint")
+    result = fsInfo.append_child("mountpoint")
       .text().set(mountpoint);
   }
 
-  return fsInfo;
+  return result;
 }
 
 bool Result::addCurrentDomainFsInfo(const char* name,
@@ -64,27 +66,28 @@ bool Result::addCurrentDomainFsInfo(const char* name,
 				    const unsigned long& p) {
 
   auto fsInfo = currentDomain.append_child("fsInfo");
+  bool result = fsInfo;
   if (fsInfo) {
-    fsInfo.append_child("name")
+    result = fsInfo.append_child("name")
       .text().set(name);
 
-    fsInfo.append_child("type")
+    result = fsInfo.append_child("type")
       .text().set(type);
 
-    fsInfo.append_child("mountpoint")
+    result = fsInfo.append_child("mountpoint")
       .text().set(mountpoint);
 
-    fsInfo.append_child("capacity")
-      .text().set(std::to_string(c).c_str());
+    result = fsInfo.append_child("capacity")
+      .text().set(std::to_string(c).c_str()); // todo exception safe conversion
 
-    fsInfo.append_child("allocation")
+    result = fsInfo.append_child("allocation")
       .text().set(std::to_string(a).c_str());
 
-    fsInfo.append_child("physical")
+    result = fsInfo.append_child("physical")
       .text().set(std::to_string(p).c_str());
   }
 
-  return fsInfo;
+  return result;
 }
 
 bool Result::error(const char* errStr) noexcept {

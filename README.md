@@ -5,14 +5,13 @@ Requirements
   - pugixml (tested on 1.5)
   - boost (1.56)
 
-Uagse
+Usage
   * 'server [port]' (log output in stderr)
   * 'client host:port/hypervisor/domain/command'
     (Example: './client localhost:8001/qemu/all/fsInfo')
 
 TODO:
-  * rethink exeption policy in Result (partitial throw. Lets all throw)
-  * append_child() checks
+  * Result add functions should be noexcept
   * signal handler
   * method GET, POST, etc. in request
   * unsigned long to pugi

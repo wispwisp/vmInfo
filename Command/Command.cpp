@@ -68,7 +68,7 @@ namespace ToolsForLibvirt {
 
   void doWithAllDomains(virConnectPtr connection,
 			Result& result,
-			std::function<void(Result&, virDomainPtr)> action) noexcept {
+			void (*action)(Result&, virDomainPtr)) noexcept {
 
     virDomainPtr *domains;
     int domainNumber = virConnectListAllDomains(connection, &domains, 0);
@@ -88,7 +88,7 @@ namespace ToolsForLibvirt {
       result.error("There are no domains");
   }
 
-  const char* hypervisorName(const std::string& domainName) {
+  const char* hypervisorName(const std::string& domainName) noexcept {
     if (domainName == "qemu")
       return "qemu:///session";
     else if (domainName == "test")
