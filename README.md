@@ -11,8 +11,9 @@ Uagse
     (Example: './client localhost:8001/qemu/all/fsInfo')
 
 TODO:
+  * rethink exeption policy in Result (partitial throw. Lets all throw)
+  * append_child() checks
   * signal handler
   * method GET, POST, etc. in request
   * unsigned long to pugi
-  * append_child() checks
   * percent

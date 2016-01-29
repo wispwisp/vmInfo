@@ -74,7 +74,6 @@ bool Result::addCurrentDomainFsInfo(const char* name,
     fsInfo.append_child("mountpoint")
       .text().set(mountpoint);
 
-    // could throw. Todo: pugi upper version, conversion from unsgined long
     fsInfo.append_child("capacity")
       .text().set(std::to_string(c).c_str());
 
