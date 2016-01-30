@@ -12,4 +12,3 @@ Usage
 
 TODO:
   * signal handler
-  * method GET, POST, etc. in request

@@ -13,17 +13,22 @@ BOOST_AUTO_TEST_SUITE(Communication)
 BOOST_AUTO_TEST_CASE(request)
 {
   {
-    Request r("/qemu/all/list");
+    Request r("GET /qemu/all/list HTTP/1.0\r\n");
+
     BOOST_CHECK(r.valid());
+    BOOST_CHECK_EQUAL(r.getMetod(), "GET");
     BOOST_CHECK_EQUAL(r.getHypervisor(), "qemu");
     BOOST_CHECK_EQUAL(r.getDomain(), "all");
     BOOST_CHECK_EQUAL(r.getCommand(), "list");
+    BOOST_CHECK_EQUAL(r.getVersion(), "HTTP/1.0");
   }
 
-  BOOST_CHECK(not Request("qemu/all/list").valid());
-  BOOST_CHECK(not Request("qemu/all/").valid());
-  BOOST_CHECK(not Request("all/list").valid());
-  BOOST_CHECK(not Request("qemu//list").valid());
+  BOOST_CHECK(not Request("GET qemu/all/list HTTP/1.0").valid());
+  BOOST_CHECK(not Request("GET qemu/all/ HTTP/1.0").valid());
+  BOOST_CHECK(not Request("GET all/list HTTP/1.0").valid());
+  BOOST_CHECK(not Request("GET qemu//list HTTP/1.0").valid());
+  BOOST_CHECK(not Request("GET /qemu/all/list").valid());
+  BOOST_CHECK(not Request("/qemu/all/list HTTP/1.0").valid());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

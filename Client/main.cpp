@@ -1,6 +1,7 @@
 #include "Url.hpp"
 #include "Responce.hpp"
 
+#include <string>
 #include <iostream>
 #include <boost/asio.hpp>
 
@@ -25,7 +26,8 @@ int main(int argc, char** argv)  {
   boost::asio::connect(s, resolver.resolve({url.host(), url.port()}));
 
   // write request
-  boost::asio::write(s, boost::asio::buffer(url.resource()));
+  std::string request = "GET " + url.resource() + " HTTP/1.0\r\n";
+  boost::asio::write(s, boost::asio::buffer(request));
 
   // read responce
   const int MAXLEN = 1024;
