@@ -7,7 +7,7 @@ Request::Request(const char* requestStr)
     metod(), hypervisor(), domain(), command(), httpVersion() {
 
   static const std::regex re {
-    R"(^(GET|POST|PUT|DELETE) /([^/]+)/([^/]+)/([^/\? ]+)(?:\?[^ ]+)? (HTTP/\d\.\d)\r?\n$)" };
+    R"(^(GET|POST|PUT|DELETE) /([^/]+)/([^/]+)/([^/\? ]+)(?:\?[^ ]+)? (HTTP/\d\.\d)\r?\n[\s\S]*$)" };
 
   std::cmatch match;
   if (std::regex_match(requestStr, match, re) &&

@@ -7,8 +7,8 @@ Requirements
 
 Usage
   * 'server [port]' (log output in stderr)
-  * 'client host:port/hypervisor/domain/command'
-    (Example: './client localhost:8001/qemu/all/fsInfo')
+  * 'vmInfo host:port/hypervisor/domain/command'
+    (Example: './vmInfo.out localhost:8001/qemu/all/fsInfo')
 
 TODO:
   * signal handler

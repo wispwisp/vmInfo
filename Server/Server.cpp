@@ -37,8 +37,7 @@ namespace AsioTools{
 				     auto cmd = Command::decodeCommand(request);
 				     Command::processComand(result, request, cmd);
 				   } else
-				     result.addStatusLine(request.getVersion()
-							  + " 400 Bad Request");
+				     result.addStatusLine("HTTP 400 Bad Request");
 
 				   size_t sz = result.write(data, maxLength);
 				   boost::asio::write(socket, boost::asio::buffer(data, sz));

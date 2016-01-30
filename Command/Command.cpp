@@ -3,7 +3,6 @@
 #include <string>
 #include <cstdlib>
 #include <cstring>
-#include <functional>
 
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>

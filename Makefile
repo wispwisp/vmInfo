@@ -1,7 +1,7 @@
 .PHONY: all clean
 
-SERVER:=vmInfo
-CLIENT:=client
+SERVER:=server
+CLIENT:=vmInfo
 TEST:=test
 
 CPP:=gcc
