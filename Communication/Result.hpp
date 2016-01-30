@@ -27,7 +27,7 @@ public:
   void addStatusLine(std::string);
   void addHTTPHeader(std::string, std::string);
 
-  // body
+  // body ('add*' functions are noexcept, `cause of libvirt)
   bool newDomain(const char* name) noexcept;
   bool addCurrentDomainFsInfo(const char*, const char*, const char*) noexcept;
   bool addCurrentDomainFsInfo(const char* name,
@@ -35,13 +35,13 @@ public:
 			      const char* mountpoint,
 			      const unsigned long& c,
 			      const unsigned long& a,
-			      const unsigned long& p);
+			      const unsigned long& p) noexcept;
 
   bool error(const char*) noexcept;
 
   // pugixml output:
   friend std::ostream& operator<< (std::ostream&, const Result&);
-  size_t write(char*, size_t) const noexcept;
+  size_t write(char*, size_t) const;
 };
 
 #endif // RESULT_H

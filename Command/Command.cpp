@@ -1,6 +1,7 @@
 #include "Command.hpp"
 
 #include <string>
+#include <cstdlib>
 #include <cstring>
 #include <functional>
 
@@ -28,20 +29,20 @@ namespace ToolsForLibvirt {
 					   blockInfo.capacity,
 					   blockInfo.allocation,
 					   blockInfo.physical)) {
-	  std::cerr << "Node allocation failed\n";
+	  fprintf(stderr, "Node allocation failed\n");
 	}
 	return;
       }
       else {
 	if (!result.error(virGetLastErrorMessage()))
-	  std::cerr << "Node allocation failed\n";
+	  fprintf(stderr, "Node allocation failed\n");
       }
     }
 
     if (!result.addCurrentDomainFsInfo(info->name,
 				       info->fstype,
 				       info->mountpoint)) {
-      std::cerr << "Node allocation failed\n";
+      fprintf(stderr, "Node allocation failed\n");
     }
   }
 
@@ -52,7 +53,7 @@ namespace ToolsForLibvirt {
     int numOfMountPoints = virDomainGetFSInfo(domain, &info, 0);
     if (numOfMountPoints == -1) {
       if (!result.error(virGetLastErrorMessage()))
-	std::cerr << "Node allocation failed\n";
+	fprintf(stderr, "Node allocation failed\n");
       return;
     }
 
@@ -69,11 +70,11 @@ namespace ToolsForLibvirt {
     const char* name = virDomainGetName(domain);
     if (name) {
       if (!result.newDomain(name))
-	std::cerr << "Node allocation failed\n";
+	fprintf(stderr, "Node allocation failed\n");
     }
     else {
       if(!result.newDomain("Undefined"))
-	std::cerr << "Node allocation failed\n";;
+	fprintf(stderr, "Node allocation failed\n");
     }
   }
 
@@ -94,12 +95,12 @@ namespace ToolsForLibvirt {
       }
       else {
 	if (!result.error(virGetLastErrorMessage()))
-	  std::cerr << "Node allocation failed\n";
+	  fprintf(stderr, "Node allocation failed\n");
       }
     }
     else {
       if (!result.error("There are no domains"))
-	std::cerr << "Node allocation failed\n";;
+	fprintf(stderr, "Node allocation failed\n");
     }
   }
 
@@ -156,14 +157,14 @@ void Command::processComand(Result& result,
   auto name = ToolsForLibvirt::hypervisorName(request.getHypervisor());
   if (!name) {
     if (!result.error("Unsupported Hypervisor"))
-      std::cerr << "Node allocation failed\n";
+      fprintf(stderr, "Node allocation failed\n");
     return;
   }
 
   virConnectPtr connection = virConnectOpen(name);
   if (!connection) {
     if (!result.error(virGetLastErrorMessage()))
-      std::cerr << "Node allocation failed\n";;
+      fprintf(stderr, "Node allocation failed\n");
     return;
   }
 
@@ -180,7 +181,7 @@ void Command::processComand(Result& result,
   case cmdType::Unknown:
   default:
     if (!result.error("Undefined command"))
-      std::cerr << "Node allocation failed\n";
+      fprintf(stderr, "Node allocation failed\n");
   }
 
   virConnectClose(connection);

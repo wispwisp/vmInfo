@@ -63,7 +63,7 @@ bool Result::addCurrentDomainFsInfo(const char* name,
 				    const char* mountpoint,
 				    const unsigned long& c,
 				    const unsigned long& a,
-				    const unsigned long& p) {
+				    const unsigned long& p) noexcept {
 
   auto fsInfo = currentDomain.append_child("fsInfo");
   bool result = fsInfo;
@@ -78,13 +78,13 @@ bool Result::addCurrentDomainFsInfo(const char* name,
       .text().set(mountpoint);
 
     result = fsInfo.append_child("capacity")
-      .text().set(std::to_string(c).c_str()); // todo exception safe conversion
+      .text().set(static_cast<long long unsigned int>(c));
 
     result = fsInfo.append_child("allocation")
-      .text().set(std::to_string(a).c_str());
+      .text().set(static_cast<long long unsigned int>(a));
 
     result = fsInfo.append_child("physical")
-      .text().set(std::to_string(p).c_str());
+      .text().set(static_cast<long long unsigned int>(p));
   }
 
   return result;
@@ -120,7 +120,7 @@ struct xml_memory_writer: pugi::xml_writer
     result += size;
   }
 };
-size_t Result::write(char* buffer, size_t size) const noexcept {
+size_t Result::write(char* buffer, size_t size) const {
 
   size_t left = size;
   char* it = buffer;
@@ -161,7 +161,7 @@ size_t Result::write(char* buffer, size_t size) const noexcept {
     std::cerr << "Buffer overflow";
     return 0;
   }
-  
+
   *it++ = '\r';
   *it++ = '\n';
   left = buffer - it;

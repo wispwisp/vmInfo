@@ -2,7 +2,7 @@
 
 Requirements
   - libvirt (tested on 1.2.21 + QEMU API 1.2.21)
-  - pugixml (tested on 1.5)
+  - pugixml (tested on 1.7)
   - boost (1.56)
 
 Usage
@@ -13,4 +13,3 @@ Usage
 TODO:
   * signal handler
   * method GET, POST, etc. in request
-  * unsigned long to pugi
