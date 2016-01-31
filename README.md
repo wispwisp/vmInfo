@@ -4,6 +4,7 @@ Requirements
   - libvirt (tested on 1.2.21 + QEMU API 1.2.21)
   - pugixml (tested on 1.7)
   - boost (1.56)
+  - qemu guest machine should have guest-agent
 
 Usage
   * 'server [port]' (log output in stderr)
